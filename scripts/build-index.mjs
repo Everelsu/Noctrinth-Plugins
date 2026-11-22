@@ -48,6 +48,21 @@ if (fs.existsSync(PLUGINS_DIR)) {
 		const bytes = fs.readFileSync(zipPath)
 		const sha256 = crypto.createHash('sha256').update(bytes).digest('hex')
 
+		const copyLocalMedia = (relPath) => {
+			if (!relPath || typeof relPath !== 'string') return undefined
+			if (/^https?:\/\//i.test(relPath)) return relPath
+			const abs = path.resolve(dir, relPath)
+			if (!abs.startsWith(dir + path.sep) || !fs.existsSync(abs)) return undefined
+			const mediaDir = path.join(OUT_DIR, 'media', manifest.id)
+			fs.mkdirSync(mediaDir, { recursive: true })
+			const fileName = path.basename(abs)
+			fs.copyFileSync(abs, path.join(mediaDir, fileName))
+			return `${BASE_URL}/media/${manifest.id}/${encodeURIComponent(fileName)}`
+		}
+
+		const iconUrl = copyLocalMedia(manifest.icon_url || manifest.icon)
+		const bannerUrl = copyLocalMedia(manifest.banner_url || manifest.banner)
+
 		let commit
 		try {
 			commit = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: dir, encoding: 'utf8' }).trim()
@@ -65,7 +80,8 @@ if (fs.existsSync(PLUGINS_DIR)) {
 			description: manifest.description,
 			homepage: manifest.homepage,
 			repository: manifest.repository,
-			icon_url: manifest.icon_url,
+			icon_url: iconUrl,
+			banner_url: bannerUrl,
 			tags: Array.isArray(manifest.tags) ? manifest.tags : undefined,
 			download_url: `${BASE_URL}/archives/${zipName}`,
 			sha256,
