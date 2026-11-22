@@ -8,19 +8,39 @@ export type NoctrinthPluginEvent =
 	| 'settings:change'
 
 export type NoctrinthInstancePermission = 'read' | 'write' | 'launch'
-export type NoctrinthUiPermission = 'notifications' | 'actions' | 'settings'
+export type NoctrinthUiPermission = 'notifications' | 'actions' | 'settings' | 'modal'
 export type NoctrinthActionSlot = 'instance-header' | 'sidebar' | 'mod-menu'
 
 export interface NoctrinthPluginSettingField {
 	key: string
-	type: 'string' | 'boolean' | 'number' | 'select'
+	type: 'string' | 'boolean' | 'number' | 'select' | 'color'
 	label: string
 	description?: string
 	placeholder?: string
 	default?: string | boolean | number
 	min?: number
 	max?: number
+	cssVar?: string
 	options?: Array<{ value: string; label: string }>
+}
+
+export type NoctrinthPluginModalBlock =
+	| { type: 'text'; text: string }
+	| { type: 'code'; text: string }
+	| { type: 'progress'; value: number; max?: number; label?: string }
+	| { type: 'list'; items: Array<{ title: string; subtitle?: string }> }
+
+export interface NoctrinthPluginModalAction {
+	id: string
+	label: string
+	color?: 'brand' | 'red' | 'standard'
+}
+
+export interface NoctrinthPluginModalRequest {
+	title: string
+	description?: string
+	blocks?: NoctrinthPluginModalBlock[]
+	actions?: NoctrinthPluginModalAction[]
 }
 
 export interface NoctrinthPluginPermissions {
@@ -102,6 +122,7 @@ export interface NoctrinthPluginSdk {
 			action: { id: string; slot: NoctrinthActionSlot; label: string; tooltip?: string },
 			handler: (context: Record<string, unknown>) => void | Promise<void>,
 		): Promise<void>
+		showModal(opts: NoctrinthPluginModalRequest): Promise<string | null>
 	}
 	instances: {
 		list(): Promise<Array<Record<string, unknown>>>
