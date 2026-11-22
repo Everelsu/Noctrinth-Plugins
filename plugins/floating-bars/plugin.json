@@ -1,0 +1,41 @@
+{
+	"$schema": "https://everelsu.github.io/Noctrinth-Plugins/plugin-schema.json",
+	"id": "floating-bars",
+	"name": "Floating Bars",
+	"version": "1.0.0",
+	"apiVersion": 1,
+	"type": "theme",
+	"author": "Noctrinth",
+	"description": "Detaches the top bar, navigation rail, main viewport, and right sidebar into rounded floating islands with customizable corner radius and accent border.",
+	"homepage": "https://github.com/Everelsu/Noctrinth-Plugins",
+	"tags": ["theme", "floating", "minimal", "layout"],
+	"styles": ["theme.css"],
+	"settings": [
+		{
+			"key": "floating",
+			"type": "boolean",
+			"label": "Floating layout",
+			"description": "Detach the title bar, navigation rail, and sidebar into rounded floating panels.",
+			"default": true
+		},
+		{
+			"key": "radius",
+			"type": "select",
+			"label": "Corner radius",
+			"default": "16px",
+			"cssVar": "--fb-radius",
+			"options": [
+				{ "value": "10px", "label": "Compact (10px)" },
+				{ "value": "16px", "label": "Rounded (16px)" },
+				{ "value": "22px", "label": "Pill (22px)" }
+			]
+		},
+		{
+			"key": "borderAccent",
+			"type": "color",
+			"label": "Border tint",
+			"default": "#a855f7",
+			"cssVar": "--fb-accent"
+		}
+	]
+}
