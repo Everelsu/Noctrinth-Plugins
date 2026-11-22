@@ -1,0 +1,3 @@
+[submodule "plugins/floating-bars"]
+	path = plugins/floating-bars
+	url = https://github.com/Everelsu/Noctrinth-Floating-Bars.git
